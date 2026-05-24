@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Fire Sensitivity Generator</title>
+    <title>Free Fire Sensitivity Generator (Premium)</title>
     <style>
         /* ส่วนของการแต่งหน้าตาเว็บสไตล์เกม Free Fire (ธีมมืด-ส้ม) */
         body {
@@ -24,6 +24,57 @@
             border: 2px solid #ff6a00;
         }
         h1 { color: #ff6a00; font-size: 24px; margin-bottom: 25px; }
+        
+        /* ------------------------------------- */
+        /* สไตล์หน้าต่างใส่ระบบโค้ด (Key System) */
+        /* ------------------------------------- */
+        .key-box {
+            margin: 20px 0;
+            padding: 20px;
+            background: #252525;
+            border-radius: 10px;
+            border: 1px dashed #555;
+        }
+        .key-input {
+            width: 80%;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #444;
+            background-color: #1a1a1a;
+            color: #fff;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+        .key-input:focus { border-color: #ff6a00; }
+        .submit-btn {
+            background-color: #ff6a00;
+            color: #fff;
+            border: none;
+            padding: 10px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .submit-btn:hover { background-color: #e05d00; }
+        .error-msg {
+            color: #ff4444;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* ------------------------------------- */
+        /* ส่วนของระบบสุ่ม (จะซ่อนไว้ก่อนตรวจโค้ดผ่าน) */
+        /* ------------------------------------- */
+        #mainSystem {
+            display: none; /* ซ่อนระบบสุ่มไว้เริ่มต้น */
+        }
         
         /* ปุ่มเลือกอุปกรณ์ */
         .device-selector {
@@ -72,7 +123,7 @@
             padding: 15px;
             background: #2a2a2a;
             border-radius: 10px;
-            display: none; /* ซ่อนไว้ก่อนกด */
+            display: none;
         }
         .result-item {
             display: flex;
@@ -90,24 +141,100 @@
 <div class="container">
     <h1>สุ่มตั้งค่าความไว Free Fire 🎯</h1>
     
-    <!-- 1. ส่วนเลือกอุปกรณ์ -->
-    <div class="device-selector">
-        <button class="device-btn active" onclick="selectDevice('Mobile')">📱 มือถือ (Mobile)</button>
-        <button class="device-btn" onclick="selectDevice('PC')">💻 คอม (PC)</button>
+    <div class="key-box" id="keyBox">
+        <p style="margin-top:0; color:#aaa;">กรุณาใส่โค้ดเพื่อเปิดใช้งานระบบสุ่ม</p>
+        <input type="text" class="key-input" id="keyCodeInput" placeholder="ใส่โค้ดที่นี่..." autocomplete="off">
+        <br>
+        <button class="submit-btn" onclick="checkCode()">ยืนยันโค้ด</button>
+        <div class="error-msg" id="errorMsg">❌ โค้ดไม่ถูกต้อง! กรุณาลองใหม่อีกครั้ง</div>
     </div>
     
-    <!-- 2. ปุ่มกดสุ่มตั้งค่า -->
-    <button class="roll-btn" onclick="generateSensitivity()">กดเพื่อสุ่มตั้งค่า 🎲</button>
-    
-    <!-- 3. ส่วนแสดงผลลัพธ์ตัวเลข 6 ค่า -->
-    <div class="result-box" id="resultBox">
-        <div class="result-item"><span class="setting-name">มองรอบๆ:</span> <span class="setting-value" id="val0">0</span></div>
-        <div class="result-item"><span class="setting-name">กล้อง Red Dot:</span> <span class="setting-value" id="val1">0</span></div>
-        <div class="result-item"><span class="setting-name">สโคป 2x:</span> <span class="setting-value" id="val2">0</span></div>
-        <div class="result-item"><span class="setting-name">สโคป 4x:</span> <span class="setting-value" id="val3">0</span></div>
-        <div class="result-item"><span class="setting-name">สโคปสไนเปอร์:</span> <span class="setting-value" id="val4">0</span></div>
-        <div class="result-item"><span class="setting-name">มุมมองอิสระ:</span> <span class="setting-value" id="val5">0</span></div>
+    <div id="mainSystem">
+        <div class="device-selector">
+            <button class="device-btn active" onclick="selectDevice('Mobile')">📱 มือถือ (Mobile)</button>
+            <button class="device-btn" onclick="selectDevice('PC')">💻 คอม (PC)</button>
+        </div>
+        
+        <button class="roll-btn" onclick="generateSensitivity()">กดเพื่อสุ่มตั้งค่า 🎲</button>
+        
+        <div class="result-box" id="resultBox">
+            <div class="result-item"><span class="setting-name">มองรอบๆ:</span> <span class="setting-value" id="val0">0</span></div>
+            <div class="result-item"><span class="setting-name">กล้อง Red Dot:</span> <span class="setting-value" id="val1">0</span></div>
+            <div class="result-item"><span class="setting-name">สโคป 2x:</span> <span class="setting-value" id="val2">0</span></div>
+            <div class="result-item"><span class="setting-name">สโคป 4x:</span> <span class="setting-value" id="val3">0</span></div>
+            <div class="result-item"><span class="setting-name">สโคปสไนเปอร์:</span> <span class="setting-value" id="val4">0</span></div>
+            <div class="result-item"><span class="setting-name">มุมมองอิสระ:</span> <span class="setting-value" id="val5">0</span></div>
+        </div>
     </div>
+</div>
+
+<script>
+    // ฟังก์ชันตรวจสอบโค้ดเข้าใช้งาน
+    function checkCode() {
+        const inputCode = document.getElementById('keyCodeInput').value.trim();
+        const correctCode = "RUOKSETTING"; // โค้ดที่กำหนดไว้
+        
+        if (inputCode === correctCode) {
+            // ถ้าโค้ดถูก: ซ่อนกล่องใส่โค้ด และแสดงระบบสุ่มออกมา
+            document.getElementById('keyBox').style.display = 'none';
+            document.getElementById('mainSystem').style.display = 'block';
+        } else {
+            // ถ้าโค้ดผิด: แสดงข้อความแจ้งเตือนสีแดง
+            document.getElementById('errorMsg').style.display = 'block';
+        }
+    }
+
+    // ตัวแปรเก็บอุปกรณ์ที่เลือกปัจจุบัน
+    let currentDevice = 'Mobile';
+
+    // ฟังก์ชันสลับปุ่มเลือกอุปกรณ์
+    function selectDevice(device) {
+        currentDevice = device;
+        const buttons = document.querySelectorAll('.device-btn');
+        buttons[0].classList.toggle('active', device === 'Mobile');
+        buttons[1].classList.toggle('active', device === 'PC');
+    }
+
+    // ฟังก์ชันสุ่มตัวเลขตามเงื่อนไข Free Fire
+    function generateSensitivity() {
+        let sensList = [];
+
+        if (currentDevice === 'Mobile') {
+            sensList.push(200); 
+            for (let i = 0; i < 5; i++) {
+                let randomNum = Math.floor(Math.random() * (200 - 100 + 1)) + 100;
+                sensList.push(randomNum);
+            }
+        } else {
+            for (let i = 0; i < 6; i++) {
+                let randomNum;
+                let rateChance = Math.floor(Math.random() * 100) + 1;
+                if (rateChance <= 3) {
+                    randomNum = 200;
+                } else {
+                    randomNum = Math.floor(Math.random() * (180 - 10 + 1)) + 10; 
+                }
+                sensList.push(randomNum);
+            }
+        }
+
+        // สลับตำแหน่งตัวเลข (Shuffle)
+        for (let i = sensList.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [sensList[i], sensList[j]] = [sensList[j], sensList[i]];
+        }
+
+        // แสดงตัวเลขขึ้นหน้าเว็บ
+        for (let i = 0; i < 6; i++) {
+            document.getElementById('val' + i).innerText = sensList[i];
+        }
+
+        document.getElementById('resultBox').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
 </div>
 
 <script>
